@@ -18,14 +18,56 @@ func TestSimulateTetris(t *testing.T) {
 			placements: []string{},
 			width:      10,
 			height:     20,
-			expected:   0, // No blocks placed, so height from bottom is 0
+			expected:   0,
 		},
 		{
-			name:       "Single cube",
+			name:       "Single Q block",
 			placements: []string{"Q0"},
 			width:      10,
 			height:     20,
-			expected:   2, // Cube placed at bottom, so height from bottom is 2
+			expected:   2,
+		},
+		{
+			name:       "Single I block",
+			placements: []string{"I0"},
+			width:      10,
+			height:     10,
+			expected:   1,
+		},
+		{
+			name:       "Single Z block",
+			placements: []string{"Z0"},
+			width:      10,
+			height:     10,
+			expected:   2,
+		},
+		{
+			name:       "Single J block",
+			placements: []string{"J0"},
+			width:      10,
+			height:     10,
+			expected:   3,
+		},
+		{
+			name:       "Single L block",
+			placements: []string{"L0"},
+			width:      10,
+			height:     10,
+			expected:   3,
+		},
+		{
+			name:       "Single T block",
+			placements: []string{"T0"},
+			width:      10,
+			height:     10,
+			expected:   2,
+		},
+		{
+			name:       "Single S block",
+			placements: []string{"S0"},
+			width:      10,
+			height:     10,
+			expected:   2,
 		},
 		{
 			name:       "Stacked blocks",
@@ -35,25 +77,53 @@ func TestSimulateTetris(t *testing.T) {
 			expected:   4, // Two cubes stacked, height from bottom is 4
 		},
 		{
-			name:       "Line clearing",
-			placements: []string{"I0", "I4", "I0", "I4", "I4", "I5"},
+			name:       "Line clearing - 2 lines",
+			placements: []string{"I0", "I4", "I0", "I4", "Q8", "I4", "I5"},
 			width:      10,
 			height:     20,
-			expected:   1, // Lines should be cleared, leaving only the last incomplete line
+			expected:   2, // Lines should be cleared, leaving only the last 2 lines
+		},
+		{
+			name:       "Line clearing - 1 line",
+			placements: []string{"I0", "I4", "Q8"},
+			width:      10,
+			height:     20,
+			expected:   1, // Line should be cleared, leaving only last line
 		},
 		{
 			name:       "Mixed blocks",
-			placements: []string{"Q0", "S4", "Z1", "T3"},
+			placements: []string{"Q0", "I2", "I6", "I0", "I6", "I6", "Q2", "Q4"},
 			width:      10,
-			height:     20,
+			height:     100,
+			expected:   3,
+		},
+		{
+			name:       "Mixed blocks 2",
+			placements: []string{"T1", "Z3", "I4"},
+			width:      10,
+			height:     100,
 			expected:   4,
 		},
 		{
-			name:       "High placement",
-			placements: []string{"I0"},
-			width:      10,
+			name:       "T block with line clearing between Q blocks",
+			placements: []string{"Q0", "Q3", "T1"},
+			width:      5,
 			height:     10,
-			expected:   1, // Single line at bottom, height from bottom is 1
+			expected:   2,
+		},
+		{
+			name:       "T block with line clearing between L, J blocks",
+			placements: []string{"L0", "J3", "T1"},
+			width:      5,
+			height:     10,
+			expected:   1,
+		},
+		{
+			name:       "Multiple lines cleared",
+			placements: []string{"I0", "I8", "I0", "I8", "I0", "I8", "I4", "I4", "I4"},
+			width:      12,
+			height:     20,
+			expected:   0, // Complex placements with multiple lines cleared
 		},
 	}
 
@@ -71,10 +141,9 @@ func TestLineClearing(t *testing.T) {
 	game := NewGame(4, 6)
 
 	// Fill the bottom line completely
-	game.grid[5][0] = true
-	game.grid[5][1] = true
-	game.grid[5][2] = true
-	game.grid[5][3] = true
+	for i := 0; i < game.width; i++ {
+		game.grid[game.height-1][i] = true
+	}
 
 	// Add a block in the line above
 	game.grid[4][0] = true
@@ -96,7 +165,7 @@ func TestLineClearing(t *testing.T) {
 		t.Errorf("Expected block to fall down after line clearing")
 	}
 
-	// Check the height from bottom
+	// Check height from the bottom
 	heightFromBottom := game.getHighestY()
 	if heightFromBottom != 1 {
 		t.Errorf("Expected height from bottom to be 1, got %d", heightFromBottom)
@@ -126,25 +195,4 @@ func TestCoordinateSystem(t *testing.T) {
 	if height != 4 {
 		t.Errorf("Block at top should have height 4 from bottom, got %d", height)
 	}
-}
-
-// Example usage function for testing
-func ExampleSimulateTetris() {
-	// Test 1: Basic functionality
-	fmt.Println("Test 1: Basic block placement")
-	placements1 := []string{"Q0", "S4"}
-	result1 := SimulateTetris(placements1, 10, 10)
-	fmt.Printf("Result: %d\n", result1)
-
-	// Test 2: Line clearing
-	fmt.Println("Test 2: Line clearing")
-	placements2 := []string{"I0", "I1", "I2", "I3", "I4", "I5"}
-	result2 := SimulateTetris(placements2, 10, 10)
-	fmt.Printf("Result: %d\n", result2)
-
-	// Test 3: Complex stacking
-	fmt.Println("Test 3: Complex stacking")
-	placements3 := []string{"Q0", "Q2", "Q4", "Q6", "Q8", "Q0", "Q2", "Q4", "Q6", "Q8"}
-	result3 := SimulateTetris(placements3, 10, 10)
-	fmt.Printf("Result: %d\n", result3)
 }
