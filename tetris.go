@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // Block represents a Tetris block with its shape and position
 type Block struct {
 	shape  [][]bool
@@ -7,16 +9,9 @@ type Block struct {
 	height int
 }
 
-// Game represents the Tetris game state
-type Game struct {
-	grid   [][]bool
-	width  int
-	height int
-}
-
 // Block definitions
 var blocks = map[string]Block{
-	"Q": { // Cube
+	"Q": { // Square
 		shape: [][]bool{
 			{true, true},
 			{true, true},
@@ -24,7 +19,7 @@ var blocks = map[string]Block{
 		width:  2,
 		height: 2,
 	},
-	"Z": { // Left facing Z
+	"Z": { // Z shaped block
 		shape: [][]bool{
 			{true, true, false},
 			{false, true, true},
@@ -32,7 +27,7 @@ var blocks = map[string]Block{
 		width:  3,
 		height: 2,
 	},
-	"S": { // Right facing S
+	"S": { // S shaped block
 		shape: [][]bool{
 			{false, true, true},
 			{true, true, false},
@@ -73,6 +68,26 @@ var blocks = map[string]Block{
 		width:  4,
 		height: 1,
 	},
+}
+
+// Game represents the Tetris game state
+type Game struct {
+	grid   [][]bool
+	width  int
+	height int
+}
+
+// NewGame creates a new Tetris game
+func NewGame(width, height int) *Game {
+	grid := make([][]bool, height)
+	for i := range grid {
+		grid[i] = make([]bool, width)
+	}
+	return &Game{
+		grid:   grid,
+		width:  width,
+		height: height,
+	}
 }
 
 // canPlace checks if a block can be placed at the given position
@@ -161,4 +176,21 @@ func (g *Game) getHighestY() int {
 		}
 	}
 	return 0 // No blocks placed, so height from bottom is 0
+}
+
+// PrintGrid prints the current game grid for debugging
+func (g *Game) PrintGrid() {
+	fmt.Println("Grid:")
+	for y := 0; y < g.height; y++ {
+		line := ""
+		for x := 0; x < g.width; x++ {
+			if g.grid[y][x] {
+				line += "█"
+			} else {
+				line += "."
+			}
+		}
+		fmt.Printf("%2d: %s\n", y, line)
+	}
+	fmt.Println()
 }
