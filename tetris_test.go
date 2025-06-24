@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -147,17 +148,20 @@ func TestLineClearing(t *testing.T) {
 
 	// Add a block in the line above
 	game.grid[4][0] = true
+	lineAbove := make([]bool, game.width)
+	copy(lineAbove, game.grid[game.height-2])
 
 	fmt.Println("Before line clearing:")
 	game.PrintGrid()
 
-	linesCleared := game.clearLines()
+	game.clearLines()
 
 	fmt.Println("After line clearing:")
 	game.PrintGrid()
 
-	if linesCleared != 1 {
-		t.Errorf("Expected 1 line cleared, got %d", linesCleared)
+	// assert that the line above has been moved down
+	if !reflect.DeepEqual(game.grid[game.height-1], lineAbove) {
+		t.Errorf("Line above has not been moved down correctly")
 	}
 
 	// The block from line 4 should now be at line 5

@@ -27,7 +27,9 @@ func SimulateTetris(placements []string, width, height int) int {
 		}
 
 		// Place the block
-		game.placeBlock(block, x, y)
+		if !game.placeBlock(block, x, y) {
+			return -1 // Failed to place the block
+		}
 
 		// Clear any full lines
 		game.clearLines()

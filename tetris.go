@@ -108,10 +108,6 @@ func (g *Game) canPlace(block Block, x, y int) bool {
 
 // placeBlock places a block at the given position
 func (g *Game) placeBlock(block Block, x, y int) bool {
-	if !g.canPlace(block, x, y) {
-		return false
-	}
-
 	for dy := 0; dy < block.height; dy++ {
 		for dx := 0; dx < block.width; dx++ {
 			if block.shape[dy][dx] {
@@ -126,20 +122,15 @@ func (g *Game) placeBlock(block Block, x, y int) bool {
 func (g *Game) findPlacement(block Block, x int) int {
 	// Start from the top and move down
 	for y := 0; y <= g.height-block.height; y++ {
-		if g.canPlace(block, x, y) {
-			// Check if this is the lowest position (try one more down)
-			if y+block.height >= g.height || !g.canPlace(block, x, y+1) {
-				return y
-			}
+		if g.canPlace(block, x, y) && !g.canPlace(block, x, y+1) {
+			return y
 		}
 	}
 	return -1 // Cannot place
 }
 
-// clearLines removes full lines and returns the number of lines cleared
-func (g *Game) clearLines() int {
-	linesCleared := 0
-
+// clearLines removes full lines
+func (g *Game) clearLines() {
 	for y := g.height - 1; y >= 0; y-- {
 		full := true
 		for x := 0; x < g.width; x++ {
@@ -158,12 +149,9 @@ func (g *Game) clearLines() int {
 			for x := 0; x < g.width; x++ {
 				g.grid[0][x] = false
 			}
-			linesCleared++
 			y++ // Check the same line again since everything shifted down
 		}
 	}
-
-	return linesCleared
 }
 
 // getHighestY returns the Y position of the highest block (bottom = 0)
@@ -178,7 +166,7 @@ func (g *Game) getHighestY() int {
 	return 0 // No blocks placed, so height from bottom is 0
 }
 
-// PrintGrid prints the current game grid for debugging
+// PrintGrid prints the current game grid for debugging purposes
 func (g *Game) PrintGrid() {
 	fmt.Println("Grid:")
 	for y := 0; y < g.height; y++ {
