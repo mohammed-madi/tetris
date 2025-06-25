@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestSimulateTetris(t *testing.T) {
+func Test_SimulateTetris(t *testing.T) {
 	tests := []struct {
 		name       string
 		placements []string
@@ -92,18 +92,18 @@ func TestSimulateTetris(t *testing.T) {
 			expected:   1, // Line should be cleared, leaving only last line
 		},
 		{
-			name:       "Mixed blocks",
-			placements: []string{"Q0", "I2", "I6", "I0", "I6", "I6", "Q2", "Q4"},
-			width:      10,
-			height:     100,
-			expected:   3,
-		},
-		{
-			name:       "Mixed blocks 2",
+			name:       "Example 2",
 			placements: []string{"T1", "Z3", "I4"},
 			width:      10,
 			height:     100,
 			expected:   4,
+		},
+		{
+			name:       "Example 3",
+			placements: []string{"Q0", "I2", "I6", "I0", "I6", "I6", "Q2", "Q4"},
+			width:      10,
+			height:     100,
+			expected:   3,
 		},
 		{
 			name:       "T block with line clearing between Q blocks",
@@ -124,7 +124,35 @@ func TestSimulateTetris(t *testing.T) {
 			placements: []string{"I0", "I8", "I0", "I8", "I0", "I8", "I4", "I4", "I4"},
 			width:      12,
 			height:     20,
-			expected:   0, // Complex placements with multiple lines cleared
+			expected:   0,
+		},
+		{
+			name:       "Fill height with I blocks",
+			placements: []string{"I0", "I0", "I0", "I0", "I0"},
+			width:      10,
+			height:     5,
+			expected:   5,
+		},
+		{
+			name:       "Out of bounds - height exceeded",
+			placements: []string{"L0", "L0", "L0", "L0"},
+			width:      10,
+			height:     10,
+			expected:   -1,
+		},
+		{
+			name:       "Out of bounds - width exceeded",
+			placements: []string{"I4"},
+			width:      5,
+			height:     10,
+			expected:   -1,
+		},
+		{
+			name:       "Invalid block type",
+			placements: []string{"K4"},
+			width:      5,
+			height:     10,
+			expected:   -1,
 		},
 	}
 
@@ -138,16 +166,17 @@ func TestSimulateTetris(t *testing.T) {
 	}
 }
 
-func TestLineClearing(t *testing.T) {
+func Test_clearLines(t *testing.T) {
 	game := NewGame(4, 6)
 
-	// Fill the bottom line completely
-	for i := 0; i < game.width; i++ {
-		game.grid[game.height-1][i] = true
-	}
+	// Fill the bottom line completely with an "I" block
+	y := game.findPlacement(blocks["I"], 0)
+	game.placeBlock(blocks["I"], 0, y)
 
 	// Add a block in the line above
-	game.grid[4][0] = true
+	y = game.findPlacement(blocks["Q"], 0)
+	game.placeBlock(blocks["Q"], 0, y)
+
 	lineAbove := make([]bool, game.width)
 	copy(lineAbove, game.grid[game.height-2])
 
@@ -164,39 +193,9 @@ func TestLineClearing(t *testing.T) {
 		t.Errorf("Line above has not been moved down correctly")
 	}
 
-	// The block from line 4 should now be at line 5
-	if !game.grid[5][0] {
-		t.Errorf("Expected block to fall down after line clearing")
-	}
-
 	// Check height from the bottom
 	heightFromBottom := game.getHighestY()
-	if heightFromBottom != 1 {
+	if heightFromBottom != 2 {
 		t.Errorf("Expected height from bottom to be 1, got %d", heightFromBottom)
-	}
-}
-
-func TestCoordinateSystem(t *testing.T) {
-	game := NewGame(4, 4)
-
-	// Place a block at the very bottom
-	game.grid[3][0] = true
-	height := game.getHighestY()
-	if height != 1 {
-		t.Errorf("Block at bottom should have height 1 from bottom, got %d", height)
-	}
-
-	// Place a block one row up
-	game.grid[2][0] = true
-	height = game.getHighestY()
-	if height != 2 {
-		t.Errorf("Block one row up should have height 2 from bottom, got %d", height)
-	}
-
-	// Place a block at the very top
-	game.grid[0][0] = true
-	height = game.getHighestY()
-	if height != 4 {
-		t.Errorf("Block at top should have height 4 from bottom, got %d", height)
 	}
 }

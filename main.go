@@ -17,7 +17,7 @@ func SimulateTetris(placements []string, width, height int) int {
 
 		block, exists := blocks[blockType]
 		if !exists {
-			continue
+			return -1 // Invalid block type
 		}
 
 		// Find the lowest valid position for this block
@@ -27,9 +27,7 @@ func SimulateTetris(placements []string, width, height int) int {
 		}
 
 		// Place the block
-		if !game.placeBlock(block, x, y) {
-			return -1 // Failed to place the block
-		}
+		game.placeBlock(block, x, y)
 
 		// Clear any full lines
 		game.clearLines()

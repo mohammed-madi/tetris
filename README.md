@@ -4,13 +4,13 @@ This is a Tetris simulation program written in Go that handles block placements 
 
 ## Block Types
 
-- **Q**: Cube (2x2)
-- **Z**: Left facing Z shape (3x2)
-- **S**: Right facing S shape (3x2)
-- **T**: Downward facing T shape (3x2)
-- **J**: Left facing L shape (3x2)
-- **L**: Right facing L shape (3x2)
-- **I**: Horizontal 4-long line (4x1)
+- **Q** : Cube (2x2)
+- **Z** : Left facing Z shape (3x2)
+- **S** : Right facing S shape (3x2)
+- **T** : Downward facing T shape (3x2)
+- **J** : Left facing L shape (3x2)
+- **L** : Right facing L shape (3x2)
+- **I** : Horizontal 4-long line (4x1)
 
 ## Block Placement Format
 
@@ -25,11 +25,11 @@ Examples:
 
 ## How It Works
 
-1. The program takes a list of block placements
-2. For each placement, it finds the lowest valid position for the block
-3. Blocks stack on top of each other when appropriate
-4. Full lines are automatically cleared (like in Tetris)
-5. The program returns the Y position of the highest block
+1. The program takes a list of block placements.
+2. For each placement, it finds the lowest valid position for the block.
+3. Blocks stack on top of each other when appropriate.
+4. Full lines are automatically cleared.
+5. The program prints the Y position of the highest block. If an invalid entry is given, the program prints -1.
 
 ## Usage
 
@@ -43,15 +43,27 @@ fmt.Printf("Highest Y position: %d\n", highestY)
 ## Running the Program
 
 ```bash
-go run main.go
+./tetris < input.txt >  output.txt
 ```
 
-The program includes example usage and visual debugging output to show how blocks are placed and lines are cleared.
+The input will be read line by line from ```input.txt``` and the output will be written - line by line - in ```output.txt```.
 
-## Key Features
+A ```PrintGrid``` function was used for debugging purposes but is not used in the main function.
 
-- **Gravity**: Blocks fall to the lowest possible position
-- **Line Clearing**: Complete horizontal lines are removed
-- **Collision Detection**: Blocks cannot overlap or go out of bounds
-- **Visual Debugging**: Optional grid printing for debugging
-- **Flexible Grid Size**: Configurable width and height 
+```bash
+go test -v
+```
+
+This command will run the tests in ```tetris_test.go```, printing out the test names, their status and any debug logging.
+
+```bash
+go build -o tetris
+```
+
+This command will build the source code and create an executable named ```tetris```. The existing ```tetris``` executable was built using this command.
+
+## Time Complexity
+
+The time complexity of the ```SimulateTetris``` function is ```O(P * H * W)``` where P is the number of placements, H is the grid height and W is the grid width.
+
+The loops in ```placeBlock``` and ```canPlace``` are not affected by input size and can be considered constant time.

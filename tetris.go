@@ -72,7 +72,7 @@ var blocks = map[string]Block{
 
 // Game represents the Tetris game state
 type Game struct {
-	grid   [][]bool
+	grid   [][]bool // grid is inverted: grid[0] is the top row
 	width  int
 	height int
 }
@@ -98,6 +98,7 @@ func (g *Game) canPlace(block Block, x, y int) bool {
 
 	for dy := 0; dy < block.height; dy++ {
 		for dx := 0; dx < block.width; dx++ {
+			// check all block segments are not colliding with existing blocks
 			if block.shape[dy][dx] && g.grid[y+dy][x+dx] {
 				return false
 			}
@@ -107,7 +108,7 @@ func (g *Game) canPlace(block Block, x, y int) bool {
 }
 
 // placeBlock places a block at the given position
-func (g *Game) placeBlock(block Block, x, y int) bool {
+func (g *Game) placeBlock(block Block, x, y int) {
 	for dy := 0; dy < block.height; dy++ {
 		for dx := 0; dx < block.width; dx++ {
 			if block.shape[dy][dx] {
@@ -115,7 +116,6 @@ func (g *Game) placeBlock(block Block, x, y int) bool {
 			}
 		}
 	}
-	return true
 }
 
 // findPlacement finds the lowest valid position for a block
@@ -146,15 +146,13 @@ func (g *Game) clearLines() {
 				copy(g.grid[yy], g.grid[yy-1])
 			}
 			// Clear the top line
-			for x := 0; x < g.width; x++ {
-				g.grid[0][x] = false
-			}
+			clear(g.grid[0])
 			y++ // Check the same line again since everything shifted down
 		}
 	}
 }
 
-// getHighestY returns the Y position of the highest block (bottom = 0)
+// getHighestY returns the Y position of the highest block element
 func (g *Game) getHighestY() int {
 	for y := 0; y < g.height; y++ {
 		for x := 0; x < g.width; x++ {
@@ -178,7 +176,7 @@ func (g *Game) PrintGrid() {
 				line += "."
 			}
 		}
-		fmt.Printf("%2d: %s\n", y, line)
+		fmt.Printf("%2d: %s\n", g.height-y-1, line)
 	}
 	fmt.Println()
 }
