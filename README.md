@@ -25,7 +25,7 @@ Examples:
 
 ## How It Works
 
-1. The program takes a list of block placements.
+1. The program takes a list of comma separated block placements.
 2. For each placement, it finds the lowest valid position for the block.
 3. Blocks stack on top of each other when appropriate.
 4. Full lines are automatically cleared on every block placement.
