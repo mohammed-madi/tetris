@@ -28,10 +28,10 @@ Examples:
 1. The program takes a list of block placements.
 2. For each placement, it finds the lowest valid position for the block.
 3. Blocks stack on top of each other when appropriate.
-4. Full lines are automatically cleared.
-5. The program prints the Y position of the highest block. If an invalid entry is given, the program prints -1.
+4. Full lines are automatically cleared on every block placement.
+5. The program prints the Y position of the highest block element. If an invalid entry is given, the program prints -1.
 
-## Usage
+## SimulateTetris example usage
 
 ```go
 placements := []string{"Q0", "S4", "Z1", "T3", "I0"}

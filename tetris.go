@@ -129,7 +129,7 @@ func (g *Game) findPlacement(block Block, x int) int {
 	return -1 // Cannot place
 }
 
-// clearLines removes full lines
+// clearLines removes full lines and shifts down all lines above
 func (g *Game) clearLines() {
 	for y := g.height - 1; y >= 0; y-- {
 		full := true
@@ -147,13 +147,14 @@ func (g *Game) clearLines() {
 			}
 			// Clear the top line
 			clear(g.grid[0])
-			y++ // Check the same line again since everything shifted down
+			// Check the same line again since everything shifted down
+			y++
 		}
 	}
 }
 
-// getHighestY returns the Y position of the highest block element
-func (g *Game) getHighestY() int {
+// getHighestElement returns the Y position (or height) of the highest block element
+func (g *Game) getHighestElement() int {
 	for y := 0; y < g.height; y++ {
 		for x := 0; x < g.width; x++ {
 			if g.grid[y][x] {

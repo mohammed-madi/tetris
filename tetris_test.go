@@ -194,7 +194,7 @@ func Test_clearLines(t *testing.T) {
 	}
 
 	// Check height from the bottom
-	heightFromBottom := game.getHighestY()
+	heightFromBottom := game.getHighestElement()
 	if heightFromBottom != 2 {
 		t.Errorf("Expected height from bottom to be 1, got %d", heightFromBottom)
 	}

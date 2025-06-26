@@ -33,7 +33,7 @@ func SimulateTetris(placements []string, width, height int) int {
 		game.clearLines()
 	}
 
-	return game.getHighestY()
+	return game.getHighestElement()
 }
 
 func main() {
