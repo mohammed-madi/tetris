@@ -1,6 +1,13 @@
 # Tetris Simulation in Go
 
-This is a Tetris simulation program written in Go that handles block placements and line clearing.
+This is a Tetris command line game in Golang that is 90% AI generated. My approach to writing this game was to split the requirements into smaller milestones I could generate with GitHub Copilot and then verify manually and with automated tests.
+
+I use the same approach when prototyping anything with AI.
+Here are the milestones:
+1. Stack blocks in a grid of predefined width and height, clear full lines and end game when top line is reached
+2. Add command line input, randomly pick a block and prompt the user for an X coordinate to place the block
+3. Add timer that simulates a block dropping, calculate based on grid height. If user misses the timer, a random position is chosen
+4. Add rotation (?)
 
 ## Block Types
 
@@ -23,7 +30,7 @@ Examples:
 - `S4`: Place an S block at x=4
 - `I0`: Place a horizontal line at x=0
 
-## How It Works
+## How SimulateTetris Works
 
 1. The program takes a list of comma separated block placements.
 2. For each placement, it finds the lowest valid position for the block.
@@ -42,27 +49,12 @@ fmt.Printf("Highest Y position: %d\n", highestY)
 
 ## Running the Program (requires Go >1.21)
 
-### Option 1: Run the program using ```go run```
 
 ```
-go run . < input.txt >  output.txt
+go run .
 ```
 
-### Option 2: Build an executable file using ```go build``` and run the executable file
 
-```bash
-go build -o tetris
-```
-
-This command will build the source code and create an executable named ```tetris```. Running this will ensure that the executable will be compatible with your OS.
-
-```bash
-./tetris < input.txt >  output.txt
-```
-
-The input will be read line by line from ```input.txt``` and the output will be written - line by line - in ```output.txt```.
-
-The main difference between the 2 methods is that ```go run``` will compile the program on each run whereas with the second method, it will be compiled using ```go build``` and the executable can be ran repeatedly without compiling the code again.
 
 ## Time Complexity
 
