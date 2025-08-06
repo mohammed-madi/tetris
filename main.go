@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -41,6 +42,7 @@ func SimulateTetris(placements []string, width, height int) int {
 func PlayTetris(width, height int) {
 	game := NewGame(width, height)
 	scanner := bufio.NewScanner(os.Stdin)
+	linesCleared := 0
 
 	// Get available block types
 	var blockTypes []string
@@ -71,9 +73,10 @@ func PlayTetris(width, height int) {
 			break
 		}
 
-		x := int(input[0] - '0')
-		if x < 0 || x >= width {
-			fmt.Println("Invalid x position!")
+		// validate input
+		x, err := strconv.Atoi(input)
+		if err != nil || x < 0 || x >= width {
+			fmt.Printf("Invalid x position: %s.\n", input)
 			continue
 		}
 
@@ -85,7 +88,13 @@ func PlayTetris(width, height int) {
 		}
 
 		game.placeBlock(block, x, y)
-		game.clearLines()
+
+		clearedThisTurn := game.clearLines()
+		if clearedThisTurn > 0 {
+			fmt.Printf("Cleared %d lines!\n", clearedThisTurn)
+		}
+
+		linesCleared += clearedThisTurn
 
 		// Check if game is over (block placed at top)
 		if y <= 0 {
@@ -95,7 +104,7 @@ func PlayTetris(width, height int) {
 		}
 	}
 
-	fmt.Printf("Final score: %d\n", game.getHighestElement())
+	fmt.Printf("Final score: %d\n", linesCleared)
 }
 
 func main() {
