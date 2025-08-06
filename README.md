@@ -40,7 +40,21 @@ highestY := SimulateTetris(placements, width, height)
 fmt.Printf("Highest Y position: %d\n", highestY)
 ```
 
-## Running the Program
+## Running the Program (requires Go >1.21)
+
+### Option 1: Run the program using ```go run```
+
+```
+go run . < input.txt >  output.txt
+```
+
+### Option 2: Build an executable file using ```go build``` and run the executable file
+
+```bash
+go build -o tetris
+```
+
+This command will build the source code and create an executable named ```tetris```. Running this will ensure that the executable will be compatible with your OS.
 
 ```bash
 ./tetris < input.txt >  output.txt
@@ -48,6 +62,16 @@ fmt.Printf("Highest Y position: %d\n", highestY)
 
 The input will be read line by line from ```input.txt``` and the output will be written - line by line - in ```output.txt```.
 
+The main difference between the 2 methods is that ```go run``` will compile the program on each run whereas with the second method, it will be compiled using ```go build``` and the executable can be ran repeatedly without compiling the code again.
+
+## Time Complexity
+
+The time complexity of the ```SimulateTetris``` function is ```O(P * H * W)``` where P is the number of placements, H is the grid height and W is the grid width.
+
+The loops in ```placeBlock``` and ```canPlace``` are not affected by input size and can be considered constant time.
+
+
+## Testing / debugging
 A ```PrintGrid``` function was used for debugging purposes but is not used in the main function.
 
 ```bash
@@ -56,14 +80,4 @@ go test -v
 
 This command will run the tests in ```tetris_test.go```, printing out the test names, their status and any debug logging.
 
-```bash
-go build -o tetris
-```
 
-This command will build the source code and create an executable named ```tetris```. The existing ```tetris``` executable was built using this command.
-
-## Time Complexity
-
-The time complexity of the ```SimulateTetris``` function is ```O(P * H * W)``` where P is the number of placements, H is the grid height and W is the grid width.
-
-The loops in ```placeBlock``` and ```canPlace``` are not affected by input size and can be considered constant time.
