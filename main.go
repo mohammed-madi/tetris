@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // SimulateTetris simulates a game of Tetris with the given block placements
@@ -64,19 +65,43 @@ func PlayTetris(width, height int) {
 		game.printBlock(block.shape)
 		fmt.Printf("Enter x position (0-%d): ", width-1)
 
-		if !scanner.Scan() {
-			break
+		// Create channel for user input
+		inputChan := make(chan string, 1)
+		go func() {
+			if scanner.Scan() {
+				inputChan <- scanner.Text()
+			}
+		}()
+
+		// Wait for input or timeout
+		timeout := time.Duration(350*height) * time.Millisecond
+		var x int
+		var validInput bool
+
+		select {
+		case input := <-inputChan:
+			input = strings.TrimSpace(input)
+			if input == "quit" || input == "q" {
+				return
+			}
+
+			// validate input
+			if parsedX, err := strconv.Atoi(input); err == nil && parsedX >= 0 && parsedX < width {
+				x = parsedX
+				validInput = true
+			} else {
+				fmt.Printf("Invalid x position: %s.\n", input)
+				validInput = false
+			}
+
+		case <-time.After(timeout):
+			// Timeout - choose random position
+			x = rand.Intn(width)
+			fmt.Printf("Time's up! Auto-placing at position %d\n", x)
+			validInput = true
 		}
 
-		input := strings.TrimSpace(scanner.Text())
-		if input == "quit" || input == "q" {
-			break
-		}
-
-		// validate input
-		x, err := strconv.Atoi(input)
-		if err != nil || x < 0 || x >= width {
-			fmt.Printf("Invalid x position: %s.\n", input)
+		if !validInput {
 			continue
 		}
 
@@ -111,5 +136,4 @@ func main() {
 	width, height := 10, 15
 
 	PlayTetris(width, height)
-
 }
