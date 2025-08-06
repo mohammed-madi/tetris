@@ -165,8 +165,8 @@ func (g *Game) getHighestElement() int {
 	return 0 // No blocks placed, so height from bottom is 0
 }
 
-// PrintGrid prints the current game grid for debugging purposes
-func (g *Game) PrintGrid() {
+// printGrid prints the current game grid for debugging purposes
+func (g *Game) printGrid() {
 	fmt.Println("Grid:")
 	for y := 0; y < g.height; y++ {
 		line := ""
@@ -179,5 +179,27 @@ func (g *Game) PrintGrid() {
 		}
 		fmt.Printf("%2d: %s\n", g.height-y-1, line)
 	}
+
+	// Print x coordinates
+	fmt.Print("    ")
+	for x := 0; x < g.width; x++ {
+		fmt.Printf("%d", x%10)
+	}
 	fmt.Println()
+	fmt.Println()
+}
+
+// printBlock prints the shape of a block to show the user its structure
+func (g *Game) printBlock(block [][]bool) {
+	fmt.Println("Block shape:")
+	for _, row := range block {
+		for _, cell := range row {
+			if cell {
+				fmt.Print("█")
+			} else {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Println()
+	}
 }

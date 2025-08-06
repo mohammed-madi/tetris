@@ -181,12 +181,12 @@ func Test_clearLines(t *testing.T) {
 	copy(lineAbove, game.grid[game.height-2])
 
 	fmt.Println("Before line clearing:")
-	game.PrintGrid()
+	game.printGrid()
 
 	game.clearLines()
 
 	fmt.Println("After line clearing:")
-	game.PrintGrid()
+	game.printGrid()
 
 	// assert that the line above has been moved down
 	if !reflect.DeepEqual(game.grid[game.height-1], lineAbove) {
