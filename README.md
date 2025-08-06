@@ -1,4 +1,4 @@
-# Tetris Simulation in Go
+# Tetris in Go
 
 This is a Tetris command line game in Golang that is 90% AI generated. My approach to writing this game was to split the requirements into smaller milestones I could generate with GitHub Copilot and then verify manually and with automated tests.
 
